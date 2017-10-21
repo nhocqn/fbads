@@ -137,10 +137,5 @@ class PostsController extends Controller
         return redirect('posts')->with('flash_message', 'Post deleted!');
     }
 
-    public function fileUpload(Request $request)
 
-    {
-
-
-    }
 }

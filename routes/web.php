@@ -25,4 +25,5 @@ Route::get('/facebook/upload-pictures','FaceBookController@fb_callback');
 Route::get('/facebook/upload-videos','FaceBookController@fb_callback');
 Route::resource('posts', 'PostsController');
 
-Route::post('fileUpload', ['as'=>'fileUpload','uses'=>'PostsController@fileUpload']);
+Route::post('post/add-image', ['as'=>'imageUpload','uses'=>'PostImageController@store']);
+Route::post('post/delete-image/{id}', ['as'=>'imageUpload','uses'=>'PostImageController@destroy']);

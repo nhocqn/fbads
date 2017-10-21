@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\Log;
 class PostVideoController extends Controller
 {
 
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+
+    public function __construct()
+
+    {
+
+        $this->middleware('auth');
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *

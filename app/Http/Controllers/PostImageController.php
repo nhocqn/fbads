@@ -12,6 +12,20 @@ class PostImageController extends Controller
 {
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+
+    public function __construct()
+
+    {
+
+        $this->middleware('auth');
+
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -21,31 +35,28 @@ class PostImageController extends Controller
     public function store(Request $request)
     {
 
-
-
         $this->validate($request, [
 
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'post_id' => 'required',
         ]);
 
-
+//        dd($request->all());
         $image = $request->file('image');
 
-        $input['imagename'] = time() . '.' . $image->getClientOriginalExtension();
+        $input['image_url'] = time() . '.' . $image->getClientOriginalExtension();
         $input['post_id'] = time() . '.' . $image->getClientOriginalExtension();
 
         $destinationPath = public_path('/images');
 
-        $image->move($destinationPath, $input['imagename']);
+        $image->move($destinationPath, $input['image_url']);
 
         $input['user_id'] = auth()->user()->id;
-        $input['post_id'] = $request->file('post_id');
+        $input['post_id'] = $request->input('post_id');
 
-        Log::info(print_r($input, true));
         PostImage::create($input);
-
-        return back()->with('success', 'Image Upload successful');
+        $this->flashSuccess('Image Upload successful');
+        return redirect()->back();
     }
 
 
@@ -59,7 +70,7 @@ class PostImageController extends Controller
     public function destroy($id)
     {
         PostImage::destroy($id);
-
-        return redirect('post_images')->with('flash_message', 'Post Image Deleted!');
+        $this->flashSuccess('Post Image Deleted!');
+        return redirect()->back();
     }
 }
