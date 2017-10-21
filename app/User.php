@@ -15,9 +15,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -32,4 +30,37 @@ class User extends Authenticatable
         'id' => 'facebook_user_id',
 //        'name' => 'full_name',
     ];
+
+    protected $casts = [
+        'facebook_user_id' => 'int'
+    ];
+
+
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'facebook_user_id',
+        'access_token'
+    ];
+    public function post_campaigns()
+    {
+        return $this->hasMany(\App\Models\PostCampaign::class);
+    }
+
+    public function post_images()
+    {
+        return $this->hasMany(\App\Models\PostImage::class);
+    }
+
+    public function post_videos()
+    {
+        return $this->hasMany(\App\Models\PostVideo::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(\App\Models\Post::class);
+    }
 }
