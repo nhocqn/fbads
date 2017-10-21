@@ -36,34 +36,37 @@ class PostVideoController extends Controller
      */
     public function store(Request $request)
     {
-
+//        dd($request->all());
 
         $this->validate($request, [
 
-            'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime|max:10000',
+            'video_url' => 'sometimes|mimetypes:video/avi,video/mp4,video/mpeg,video/quicktime',
             'post_id' => 'required',
+            'user_id' => 'required',
         ]);
+
 
         if (isset($request->is_url)) {
             $input['video_url'] = $request->video_text_url;
+            $input['is_url'] = 1;
         } else {
-            $image = $request->file('image');
-
-            $input['video_url'] = time() . '.' . $image->getClientOriginalExtension();
+            $video = $request->file('video');
+            $input['is_url'] = 0;
+            $input['video_url'] = time() . '.' . $video->getClientOriginalExtension();
 
             $destinationPath = public_path('/videos');
 
-            $image->move($destinationPath, $input['video_url']);
+            $video->move($destinationPath, $input['video_url']);
         }
 
 
         $input['user_id'] = auth()->user()->id;
-        $input['post_id'] = $request->file('post_id');
+        $input['post_id'] = $request->input('post_id');
 
-        Log::info(print_r($input, true));
         PostVideo::create($input);
+        $this->flashSuccess('Video Upload successful');
 
-        return back()->with('success', 'Image Upload successful');
+        return redirect()->back();
 
 
     }
@@ -80,6 +83,8 @@ class PostVideoController extends Controller
     {
         PostVideo::destroy($id);
 
-        return redirect('post_videos')->with('flash_message', 'Post Video deleted!');
+        $this->flashSuccess('Post Video deleted!');
+
+        return redirect()->back();
     }
 }

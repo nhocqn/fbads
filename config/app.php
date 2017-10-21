@@ -180,6 +180,8 @@ return [
         SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
         Reliese\Coders\CodersServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Yish\LaravelFacebookAdsSdk\FacebookAdsServiceProvider::class,
+
 
     ],
 
@@ -234,6 +236,7 @@ return [
         'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,
+        'FacebookAds' => Yish\LaravelFacebookAdsSdk\Facades\LaravelFacebookAdsSdk::class,
 
     ],
 

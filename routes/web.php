@@ -27,3 +27,6 @@ Route::resource('posts', 'PostsController');
 
 Route::post('post/add-image', ['as'=>'imageUpload','uses'=>'PostImageController@store']);
 Route::post('post/delete-image/{id}', ['as'=>'imageUpload','uses'=>'PostImageController@destroy']);
+
+Route::post('post/add-video', ['as'=>'videoUpload','uses'=>'PostVideoController@store']);
+Route::post('post/delete-video/{id}', ['as'=>'videoUpload','uses'=>'PostVideoController@destroy']);

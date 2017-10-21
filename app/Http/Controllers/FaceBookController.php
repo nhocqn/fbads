@@ -17,8 +17,7 @@ class FaceBookController extends Controller
         // Send an array of permissions to request
         $login_url = $fb->getLoginUrl();
 
-        // Obviously you'd do this in blade :)
-        echo '<a href="' . $login_url . '"> with Facebook</a>';
+        return view('auth/login')->with(compact('login_url'));
     }
 
     // Endpoint that is redirected to after an authentication attempt
@@ -80,8 +79,10 @@ class FaceBookController extends Controller
         // This will only work if you've added the SyncableGraphNodeTrait to your User model.
         $user = User::createOrUpdateGraphNode($facebook_user);
 
-         // Log the user into Laravel
+        // Log the user into Laravel
         Auth::login($user);
+        User::where('id', \auth()->user()->id)->update(['access_token' => (string)$token]);
+        $this->flashSuccess("");
 
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }

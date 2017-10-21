@@ -34,7 +34,8 @@ class PostVideo extends Eloquent
 	protected $fillable = [
 		'post_id',
 		'video_url',
-		'user_id'
+		'user_id',
+        'is_url'
 	];
 
 	public function user()

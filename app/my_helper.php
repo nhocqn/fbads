@@ -83,17 +83,33 @@ function sendEmail($message_data, $subject, $from, $to, $type = null)
 
 
     \Illuminate\Support\Facades\Mail::send('emails.' . $type, compact('message_data', 'info'), function ($message) use ($info) {
-        $message->from(getAppEmail(), getAppName(   ));
+        $message->from(getAppEmail(), getAppName());
         $message->bcc($info['email'])->subject($info['subject']);
     });
 
 }
 
-function getAppName(){
+function getAppName()
+{
     return "Ad Manager";
 }
 
-function getAppEmail(){
+function yourtubeVidEmbeder($url)
+{
+
+    $slit = explode('/', $url);
+    if (count($slit) - 1 >= 0) {
+        $main_id = $slit[count($slit) - 1];
+        unset($slit[count($slit) - 1]);
+        $new_url = implode('/',  $slit) . '/embed/' . $main_id;
+        return str_replace(['youtu.be'], ['youtube.com'], $new_url);
+
+    }
+    return "";
+}
+
+function getAppEmail()
+{
     return "ndu4george@gmail.com";
 }
 
@@ -143,7 +159,6 @@ function multi_unset($array, $keys)
         return null;
     }
 }
-
 
 
 function encrypt_decrypt($action, $string)
