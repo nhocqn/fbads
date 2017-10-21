@@ -18,3 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/facebook/login','FaceBookController@fb_login');
+Route::get('/facebook/callback','FaceBookController@fb_callback');
+Route::get('/facebook/upload-pictures','FaceBookController@fb_callback');
+Route::get('/facebook/upload-videos','FaceBookController@fb_callback');

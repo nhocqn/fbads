@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
-
+        Reliese\Coders\CodersServiceProvider::class,
 
     ],
 

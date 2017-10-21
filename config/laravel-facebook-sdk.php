@@ -39,11 +39,11 @@ return [
      *
      * https://developers.facebook.com/docs/facebook-login/permissions
      */
-    'default_scope' => [],
+    'default_scope' => ['publish_actions','email', 'ads_management', 'ads_read', 'user_posts', 'user_photos', 'user_videos','ads_management'],
 
     /*
      * The default endpoint that Facebook will redirect to after
      * an authentication attempt.
      */
     'default_redirect_uri' => '/facebook/callback',
-    ];
+];
