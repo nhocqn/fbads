@@ -24,3 +24,5 @@ Route::get('/facebook/callback','FaceBookController@fb_callback');
 Route::get('/facebook/upload-pictures','FaceBookController@fb_callback');
 Route::get('/facebook/upload-videos','FaceBookController@fb_callback');
 Route::resource('posts', 'PostsController');
+
+Route::post('fileUpload', ['as'=>'fileUpload','uses'=>'PostsController@fileUpload']);

@@ -1,15 +1,19 @@
-<div class="form-group {{ $errors->has('created_at') ? 'has-error' : ''}}">
-    <label for="created_at" class="col-md-4 control-label">{{ 'Created At' }}</label>
+<div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
+    <label for="title"  class="col-md-4 control-label">{{ 'Title' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="created_at" type="text" id="created_at" value="{{ $post->created_at or ''}}" >
-        {!! $errors->first('created_at', '<p class="help-block">:message</p>') !!}
+        <input class="form-control" required  name="title" type="text" id="title" value="{{ $post->title or ''}}">
+        {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('updated_at') ? 'has-error' : ''}}">
-    <label for="updated_at" class="col-md-4 control-label">{{ 'Updated At' }}</label>
+</div>
+<div class="form-group {{ $errors->has('message') ? 'has-error' : ''}}">
+    <label for="message" class="col-md-4 control-label">{{ 'Messagw' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="updated_at" type="textarea" id="updated_at" >{{ $post->updated_at or ''}}</textarea>
-        {!! $errors->first('updated_at', '<p class="help-block">:message</p>') !!}
+        <textarea required class="form-control" rows="5" name="message" type="textarea"
+                  id="message">{{ $post->message or ''}}</textarea>
+        {!! $errors->first('message', '<p class="help-block">:message</p>') !!}
     </div>
+    <input name="user_id" value="{{ auth()->user()->id }}" class="hidden">
+    <input name="pushed_to_fb" value="0" class="hidden">
 </div>
 
 <div class="form-group">
@@ -17,3 +21,4 @@
         <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
     </div>
 </div>
+

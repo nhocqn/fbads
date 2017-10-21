@@ -36,12 +36,13 @@ class Post extends Eloquent
 	protected $fillable = [
 		'message',
 		'pushed_to_fb',
-		'user_id'
+		'user_id',
+		'title',
 	];
 
 	public function user()
 	{
-		return $this->belongsTo(\App\Models\User::class);
+		return $this->belongsTo(\App\User::class);
 	}
 
 	public function post_campaigns()

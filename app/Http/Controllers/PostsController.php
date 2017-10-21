@@ -12,6 +12,21 @@ use Illuminate\Http\Request;
 
 class PostsController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+
+    public function __construct()
+
+    {
+
+        $this->middleware('auth');
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -120,5 +135,12 @@ class PostsController extends Controller
         Post::destroy($id);
 
         return redirect('posts')->with('flash_message', 'Post deleted!');
+    }
+
+    public function fileUpload(Request $request)
+
+    {
+
+
     }
 }
