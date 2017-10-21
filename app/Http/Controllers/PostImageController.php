@@ -45,7 +45,6 @@ class PostImageController extends Controller
         $image = $request->file('image');
 
         $input['image_url'] = time() . '.' . $image->getClientOriginalExtension();
-        $input['post_id'] = time() . '.' . $image->getClientOriginalExtension();
 
         $destinationPath = public_path('/images');
 

@@ -40,19 +40,22 @@ class PostVideoController extends Controller
 
         $this->validate($request, [
 
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime|max:10000',
             'post_id' => 'required',
         ]);
 
+        if (isset($request->is_url)) {
+            $input['video_url'] = $request->video_text_url;
+        } else {
+            $image = $request->file('image');
 
-        $image = $request->file('image');
+            $input['video_url'] = time() . '.' . $image->getClientOriginalExtension();
 
-        $input['imagename'] = time() . '.' . $image->getClientOriginalExtension();
-        $input['post_id'] = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/videos');
 
-        $destinationPath = public_path('/images');
+            $image->move($destinationPath, $input['video_url']);
+        }
 
-        $image->move($destinationPath, $input['imagename']);
 
         $input['user_id'] = auth()->user()->id;
         $input['post_id'] = $request->file('post_id');

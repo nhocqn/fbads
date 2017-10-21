@@ -6,7 +6,7 @@
     <input name="user_id" value="{{ auth()->user()->id }}" class="hidden">
     <input name="post_id" value="{{  $post->id or "" }}" class="hidden">
     <div class="col-md-4">
-        <input type="submit" class="btn btn-sm btn-default" value="Add A Video to the Post">
+        <input type="submit" class="btn btn-sm btn-default" value="Add Image to the Post">
     </div>
 
 </form>
