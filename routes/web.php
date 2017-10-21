@@ -23,3 +23,4 @@ Route::get('/facebook/login','FaceBookController@fb_login');
 Route::get('/facebook/callback','FaceBookController@fb_callback');
 Route::get('/facebook/upload-pictures','FaceBookController@fb_callback');
 Route::get('/facebook/upload-videos','FaceBookController@fb_callback');
+Route::resource('posts', 'PostsController');
