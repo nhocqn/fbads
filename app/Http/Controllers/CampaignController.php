@@ -89,6 +89,7 @@ class CampaignController extends Controller
                 ));
                 $res = $campaign->exportAllData();
                 $requestData['ref'] = $res['id'];
+                $requestData['user_id'] = auth()->user()->id;
                 CampaignModel::create($requestData);
                 $this->flashSuccess("Campaign Added!");
                 return redirect('campaigns');

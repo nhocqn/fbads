@@ -23,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'access_token'
+        'password', 'remember_token'
     ];
 
     protected static $graph_node_field_aliases = [

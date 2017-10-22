@@ -48,6 +48,7 @@ class Adset extends Eloquent
 		'interest_query',
 		'country_digraph_array',
 		'bid_amount',
+		'adset_name',
 		'daily_budget',
 		'start_time',
 		'end_time',

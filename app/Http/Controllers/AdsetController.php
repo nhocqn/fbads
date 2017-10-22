@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Models\Adset as AdsetModel;
+use App\Models\Campaign;
 use FacebookAds\Api;
 use FacebookAds\Object\AdSet;
 use FacebookAds\Object\Fields\AdSetFields;
@@ -60,25 +61,27 @@ class AdsetController extends Controller
 
 
         try {
+
             $this->validate($request, [
                 'campaign_id' => 'required',
                 'end_time' => 'required',
                 'start_time' => 'required',
                 'adset_name' => 'required',
                 'country_digraph_array' => 'required',
-                'daily_budget' => 'number|min:1',
+                'daily_budget' => 'required',
+                'interest_query' => 'required',
             ]);
-
+            $campaign = Campaign::where('id', $request->campaign_id)->first();
 
             $interest_query = $request->interest_query;
             $country_digraph_array = $request->country_digraph_array;
-            $campaign_id = $request->campaign_id;
+            $campaign_id = $campaign->ref;
             $adset_name = $request->adset_name;
             $bid_amount = $request->bid_amount;
             $daily_budget = $request->daily_budget;
             $start_time = (new \DateTime($request->start_time))->format(\DateTime::ISO8601);
             $end_time = (new \DateTime($request->end_time))->format(\DateTime::ISO8601);
-
+//            dd($campaign->toArray());
 
             //        / Initialize a new Session and instantiate an API object
             Api::init(
@@ -107,7 +110,6 @@ class AdsetController extends Controller
 
                 //  Define Budget, Billing, Optimization, and Duration
 
-
                 $adset = new AdSet(null, "act_$acct_id");
                 $adset->setData(array(
                     AdSetFields::NAME => $adset_name,
@@ -124,11 +126,12 @@ class AdsetController extends Controller
                     AdSet::STATUS_PARAM_NAME => AdSet::STATUS_PAUSED,
                 ));
 
-
                 // Set up Ad Creative
                 $adsetArray = $adset->exportAllData();
                 $requestData = $request->all();
                 $requestData['ref'] = $adsetArray['id'];
+                $requestData['campaign_id'] = $campaign->id;
+                $requestData['user_id'] = auth()->user()->id;
                 $requestData['country_digraph_array'] = json_encode($request->country_digraph_array);
                 AdsetModel::create($requestData);
                 $this->flashSuccess("Campaign AdSet Added!");
@@ -138,7 +141,7 @@ class AdsetController extends Controller
             $this->flashError("Invalid Account ID");
             return redirect()->back();
         } catch (\Exception $e) {
-            Log::info("Error:: " . $e->getMessage());
+
             $this->flashError("Error:: " . $e->getMessage());
             return redirect()->back();
         }

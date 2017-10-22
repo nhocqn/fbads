@@ -162,7 +162,7 @@ function multi_unset($array, $keys)
 
 function getAllCampaigns()
 {
-    return \App\Models\Campaign::pluck('id', 'name')->toArray();
+    return \App\Models\Campaign::pluck('name', 'id')->toArray();
 }
 
 function encrypt_decrypt($action, $string)

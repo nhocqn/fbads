@@ -21,6 +21,7 @@
                             </button>
                         </a>
 
+                        @include('errors.showerrors')
                         <form method="POST" action="{{ url('adsets' . '/' . $adset->id) }}" accept-charset="UTF-8"
                               style="display:inline">
                             {{ method_field('DELETE') }}
@@ -44,6 +45,10 @@
                                 <tr>
                                     <th> Campaign Id</th>
                                     <td> {{ $adset->campaign_id }} </td>
+                                </tr>
+                                <tr>
+                                    <th> Adset Name</th>
+                                    <td> {{ $adset->adset_name }} </td>
                                 </tr>
                                 <tr>
                                     <th>Interest Query</th>

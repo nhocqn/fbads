@@ -5,11 +5,20 @@
         $campaigns = getAllCampaigns();
         ?>
         <select class="form-control" required name="campaign_id">
-            @foreach($campaigns as $campaign)
-                <option value="{{$campaign['id']}}">{{$campaign['name']}}</option>
+            @foreach($campaigns as $key => $campaign)
+                <option value="{{$key}}">{{$campaign}}</option>
             @endforeach
         </select>
 
+    </div>
+</div>
+
+<div class="form-group {{ $errors->has('adset_name') ? 'has-error' : ''}}">
+    <label for="adset_name" class="col-md-4 control-label">{{ 'Adset Name' }}</label>
+    <div class="col-md-6">
+
+        <input class="form-control" required name="adset_name">
+        {!! $errors->first('adset_name', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 
