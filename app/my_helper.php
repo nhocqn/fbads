@@ -101,7 +101,7 @@ function yourtubeVidEmbeder($url)
     if (count($slit) - 1 >= 0) {
         $main_id = $slit[count($slit) - 1];
         unset($slit[count($slit) - 1]);
-        $new_url = implode('/',  $slit) . '/embed/' . $main_id;
+        $new_url = implode('/', $slit) . '/embed/' . $main_id;
         return str_replace(['youtu.be'], ['youtube.com'], $new_url);
 
     }
@@ -160,6 +160,10 @@ function multi_unset($array, $keys)
     }
 }
 
+function getAllCampaigns()
+{
+    return \App\Models\Campaign::pluck('id', 'name')->toArray();
+}
 
 function encrypt_decrypt($action, $string)
 {

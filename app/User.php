@@ -44,6 +44,21 @@ class User extends Authenticatable
         'facebook_user_id',
         'access_token'
     ];
+    public function adsets()
+    {
+        return $this->hasMany(\App\Models\Adset::class);
+    }
+
+    public function campaigns()
+    {
+        return $this->hasMany(\App\Models\Campaign::class);
+    }
+
+    public function facebook_posts()
+    {
+        return $this->hasMany(\App\Models\FacebookPost::class);
+    }
+
     public function post_campaigns()
     {
         return $this->hasMany(\App\Models\PostCampaign::class);

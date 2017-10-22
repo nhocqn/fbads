@@ -24,7 +24,7 @@ Route::get('/login', function () {
     return redirect()->to(url('/facebook/login'));
 });
 
-Route::get('/facebook/login', 'FaceBookController@fb_login');
+Route::get('/facebook/login', 'FaceBookController@fb_login')->name("login");
 Route::get('/facebook/callback', 'FaceBookController@fb_callback');
 Route::get('/facebook/upload-pictures', 'FaceBookController@fb_callback');
 Route::get('/facebook/upload-videos', 'FaceBookController@fb_callback');
@@ -38,7 +38,8 @@ Route::post('/facebook/load-post/feed', 'FaceBookController@getFeedPost');
 Route::post('/facebook/load-post/video', 'FaceBookController@getVideoPost');
 
 Route::resource('campaigns', 'CampaignController');
-Route::resource('facebook_posts', 'FacebookPostController');
+Route::resource('posts', 'PostsController');
+Route::resource('adsets', 'AdsetController');
 Route::resource('facebook_posts', 'FacebookPostController');
 
 Route::post('post/add-image', ['as' => 'imageUpload', 'uses' => 'PostImageController@store']);

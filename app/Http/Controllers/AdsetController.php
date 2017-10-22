@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Campaign as CampaignModel;
+use App\Models\Adset as AdsetModel;
 use FacebookAds\Api;
 use FacebookAds\Object\AdSet;
 use FacebookAds\Object\Fields\AdSetFields;
@@ -15,20 +15,10 @@ use FacebookAds\Object\TargetingSearch;
 use FacebookAds\Object\Values\AdSetBillingEventValues;
 use FacebookAds\Object\Values\AdSetOptimizationGoalValues;
 use Illuminate\Http\Request;
-use DateTime;
-use FacebookAds\Object\Campaign;
-use FacebookAds\Object\Fields\CampaignFields;
-use FacebookAds\Object\Values\CampaignObjectiveValues;
 use Illuminate\Support\Facades\Log;
 
-
-class CampaignController extends Controller
+class AdsetController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -40,12 +30,12 @@ class CampaignController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $campaigns = CampaignModel::paginate($perPage);
+            $adsets = AdsetModel::paginate($perPage);
         } else {
-            $campaigns = CampaignModel::paginate($perPage);
+            $adsets = AdsetModel::paginate($perPage);
         }
 
-        return view('campaigns.index', compact('campaigns'));
+        return view('adsets.index', compact('adsets'));
     }
 
     /**
@@ -55,7 +45,7 @@ class CampaignController extends Controller
      */
     public function create()
     {
-        return view('campaigns.create');
+        return view('adsets.create');
     }
 
     /**
@@ -67,54 +57,29 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            //        / Initialize a new Session and instantiate an API object
-            Api::init(
-                env('FACEBOOK_APP_ID', null),
-                env('FACEBOOK_APP_SECRET', null),
-
-                auth()->user()->access_token // Your user access token
-            );
-            $requestData = $request->all();
-            $acct_id = env('AD_ACCOUNT_ID', null);
-            if ($acct_id) {
-                $campaign = new Campaign(null, "act_$acct_id");
-                $campaign->setData(array(
-                    CampaignFields::NAME => $request->name,
-                    CampaignFields::OBJECTIVE => CampaignObjectiveValues::LINK_CLICKS,
-                ));
-
-                $campaign->create(array(
-                    Campaign::STATUS_PARAM_NAME => Campaign::STATUS_PAUSED,
-                ));
-                $res = $campaign->exportAllData();
-                $requestData['ref'] = $res['id'];
-                CampaignModel::create($requestData);
-                $this->flashSuccess("Campaign Added!");
-                return redirect('campaigns');
-
-            }
-            $this->flashError("Invalid Account ID");
-            return redirect('campaigns');
-        } catch (\Exception $e) {
-            $this->flashError("Error:: " . $e->getMessage());
-            return redirect('campaigns');
-        }
-    }
-
-    public function create_adset(Request $request)
-    {
-        $interest_query = 'baseball';
-        $country_digraph_array = array('US');
-        $campaign_id = '<CAMPAIGN_ID>';
-        $adset_name = 'name';
-        $bid_amount = '3';
-        $daily_budget = '10';
-        $start_time = (new \DateTime("+1 week"))->format(\DateTime::ISO8601);
-        $end_time = (new \DateTime("+2 week"))->format(DateTime::ISO8601);
 
 
         try {
+            $this->validate($request, [
+                'campaign_id' => 'required',
+                'end_time' => 'required',
+                'start_time' => 'required',
+                'adset_name' => 'required',
+                'country_digraph_array' => 'required',
+                'daily_budget' => 'number|min:1',
+            ]);
+
+
+            $interest_query = $request->interest_query;
+            $country_digraph_array = $request->country_digraph_array;
+            $campaign_id = $request->campaign_id;
+            $adset_name = $request->adset_name;
+            $bid_amount = $request->bid_amount;
+            $daily_budget = $request->daily_budget;
+            $start_time = (new \DateTime($request->start_time))->format(\DateTime::ISO8601);
+            $end_time = (new \DateTime($request->end_time))->format(\DateTime::ISO8601);
+
+
             //        / Initialize a new Session and instantiate an API object
             Api::init(
                 env('FACEBOOK_APP_ID', null),
@@ -161,8 +126,11 @@ class CampaignController extends Controller
 
 
                 // Set up Ad Creative
-
-
+                $adsetArray = $adset->exportAllData();
+                $requestData = $request->all();
+                $requestData['ref'] = $adsetArray['id'];
+                $requestData['country_digraph_array'] = json_encode($request->country_digraph_array);
+                AdsetModel::create($requestData);
                 $this->flashSuccess("Campaign AdSet Added!");
                 return redirect()->back();
 
@@ -170,9 +138,11 @@ class CampaignController extends Controller
             $this->flashError("Invalid Account ID");
             return redirect()->back();
         } catch (\Exception $e) {
+            Log::info("Error:: " . $e->getMessage());
             $this->flashError("Error:: " . $e->getMessage());
             return redirect()->back();
         }
+
     }
 
     /**
@@ -184,9 +154,9 @@ class CampaignController extends Controller
      */
     public function show($id)
     {
-        $campaign = CampaignModel::findOrFail($id);
+        $adset = AdsetModel::findOrFail($id);
 
-        return view('campaigns.show', compact('campaign'));
+        return view('adsets.show', compact('adset'));
     }
 
     /**
@@ -198,9 +168,9 @@ class CampaignController extends Controller
      */
     public function edit($id)
     {
-        $campaign = CampaignModel::findOrFail($id);
+        $adset = AdsetModel::findOrFail($id);
 
-        return view('campaigns.edit', compact('campaign'));
+        return view('adsets.edit', compact('adset'));
     }
 
     /**
@@ -216,10 +186,10 @@ class CampaignController extends Controller
 
         $requestData = $request->all();
 
-        $campaign = CampaignModel::findOrFail($id);
-        $campaign->update($requestData);
+        $adset = AdsetModel::findOrFail($id);
+        $adset->update($requestData);
 
-        return redirect('campaigns')->with('flash_message', 'campaigns updated!');
+        return redirect('adsets')->with('flash_message', 'Adset updated!');
     }
 
     /**
@@ -231,8 +201,8 @@ class CampaignController extends Controller
      */
     public function destroy($id)
     {
-        CampaignModel::destroy($id);
+        AdsetModel::destroy($id);
 
-        return redirect('campaigns')->with('flash_message', 'campaigns deleted!');
+        return redirect('adsets')->with('flash_message', 'Adset deleted!');
     }
 }
