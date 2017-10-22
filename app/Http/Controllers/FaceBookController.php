@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\User;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -18,6 +19,7 @@ class FaceBookController extends Controller
     public function __construct(LaravelFacebookSdk $fb)
     {
         $this->fb = $fb;
+        $this->middleware('auth')->except('fb_login','fb_callback');
     }
 
     public function fb_login()
@@ -96,7 +98,7 @@ class FaceBookController extends Controller
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }
 
- 
+
 
 
     public function video_upload($data)

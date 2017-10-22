@@ -20,6 +20,9 @@ Auth::routes();
 Route::get('/home', function () {
     return redirect()->to(url('posts'));
 });
+Route::get('/login', function () {
+    return redirect()->to(url('/facebook/login'));
+});
 
 Route::get('/facebook/login', 'FaceBookController@fb_login');
 Route::get('/facebook/callback', 'FaceBookController@fb_callback');

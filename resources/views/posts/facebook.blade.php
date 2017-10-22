@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             @include('admin.sidebar')
-
+{{--{{ dd($post->id) }}--}}
             <div class="col-md-9">
                 <div class="panel panel-default">
                     <div class="panel-heading"> Title: {{ $post->title or "NA" }}</div>
@@ -17,8 +17,8 @@
 
                         <form action="{{ url('/facebook/push/posts') }}" method="post"
                               id="image_post"> {{csrf_field()}}
-                            <input name="user_id" value="{{ auth()->user()->id }}" class="hidden">
-                            <input name="post_id" value="{{ $post->id }}" class="hidden">
+                            <input name="user_id" value="{{ auth()->user()->id  }}" class="hidden">
+                            <input name="post_id" value="{{ $post->id or "  " }}" class="hidden">
 
                         </form>
 
