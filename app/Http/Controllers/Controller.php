@@ -13,17 +13,17 @@ class Controller extends BaseController
 
     public function flashError($message)
     {
-        session()->flash('status-error', $message);
+        session()->flash('alert-danger', $message);
     }
 
     public function flashInfo($message)
     {
-        session()->flash('status-info', $message);
+        session()->flash('alert-info', $message);
     }
 
     public function flashSuccess($message)
     {
-        session()->flash('status-success', $message);
+        session()->flash('alert-success', $message);
     }
 
 }

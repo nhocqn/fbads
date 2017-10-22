@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FacebookPost;
 use App\Models\Post;
 use App\User;
 use Facebook\Exceptions\FacebookResponseException;
@@ -85,7 +86,7 @@ class FaceBookController extends Controller
         // Convert the response to a `Facebook/GraphNodes/GraphUser` collection
         $facebook_user = $response->getGraphUser();
 
-        Log::info(print_r($facebook_user, true));
+        Log::info(print_r($facebook_user->asArray(), true));
         // Create the user if it does not exist or update the existing entry.
         // This will only work if you've added the SyncableGraphNodeTrait to your User model.
         $user = User::createOrUpdateGraphNode($facebook_user);
@@ -98,13 +99,27 @@ class FaceBookController extends Controller
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }
 
+    public function save_to_fb_feed($data, $response, $post_id)
+    {
 
-    public function video_upload($data)
+        FacebookPost::create([
+            'facebook_post_id' => $response['id'] ? $response['id'] : null,
+            'post_id' => $post_id,
+            'meta' => json_encode($data),
+            'user_id' => \auth()->user()->id,
+        ]);
+
+    }
+
+    public function video_upload($data, $post_id)
     {
         $fb = $this->fb;
 
-        return $fb->post('/me/videos', $data, auth()->user()->access_token);
-
+        $response = $fb->post('/me/videos', $data, auth()->user()->access_token);
+        $graphNode = $response->getGraphNode()->asArray();
+        Log::info(print_r($graphNode, true));
+        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        return $graphNode;
 //        try {
 //            $response = $fb->post('/me/videos', $data, auth()->user()->access_token);
 //        } catch (FacebookResponseException $e) {
@@ -123,18 +138,25 @@ class FaceBookController extends Controller
 //        return redirect()->back();
     }
 
-    public function image_upload($data)
+    public function image_upload($data, $post_id)
     {
         $fb = $this->fb;
         // Returns a `Facebook\FacebookResponse` object
-        return $response = $fb->post('/me/photos', $data, auth()->user()->access_token);
-
+        $response = $fb->post('/me/photos', $data, auth()->user()->access_token);
+        $graphNode = $response->getGraphNode()->asArray();
+        Log::info(print_r($graphNode, true));
+        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        return $graphNode;
     }
 
-    public function feed_upload($data)
+    public function feed_upload($data, $post_id)
     {
         $fb = $this->fb;
-        return $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+        $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+        $graphNode = $response->getGraphNode();
+        Log::info(print_r($graphNode, true));
+        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        return $graphNode;
     }
 
     public function fb_push_post($id)
@@ -171,7 +193,13 @@ class FaceBookController extends Controller
       ];
        * */
         try {
-            dd($request->all());
+//            dd($request->all());
+
+            $this->validate($request, [
+                'post_id' => 'required',
+             ]);
+
+
             $reqData = $request->all();
             $fb = $this->fb;
 
@@ -185,7 +213,7 @@ class FaceBookController extends Controller
                     "description" => $request->dedscription ? $request->dedscription : '',
                 ];
 
-                $this->feed_upload($data);
+                $this->feed_upload($data, $request->post_id);
             }
 
             if (isset($reqData['video_post']) && $reqData['video_post'] == "on") {
@@ -196,7 +224,7 @@ class FaceBookController extends Controller
                 ];
 
                 if ($data['source'] != '') {
-                    $this->video_upload($data);
+                    $this->video_upload($data, $request->post_id);
                 }
             }
 
@@ -207,22 +235,25 @@ class FaceBookController extends Controller
                     'source' => $request->selected_image ? $fb->fileToUpload($request->selected_image) : ''
                 ];
                 if ($data['source'] != '') {
-                    $this->image_upload($data);
+                    $this->image_upload($data, $request->post_id);
                 }
             }
         } catch (FacebookResponseException $e) {
             // When Graph returns an error
+            Log::info('Graph returned an error: ' .  $e->getMessage());
             $this->flashError('Graph returned an error: ' . $e->getMessage());
             return redirect()->back();
         } catch (FacebookSDKException $e) {
             // When validation fails or other local issues
+            Log::info('Facebook SDK returned an error: ' .  $e->getMessage());
             $this->flashError('Facebook SDK returned an error: ' . $e->getMessage());
             return redirect()->back();
         }
 
-
-
-        $this->flashError('Facebook post was successful');
+        Post::where('id', $request->post_id)->update([
+            'pushed_to_fb' => 1
+        ]);
+        $this->flashSuccess('Facebook post was successful');
         return redirect()->back();
     }
 

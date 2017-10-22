@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 21 Oct 2017 16:32:12 +0000.
+ * Date: Sun, 22 Oct 2017 09:17:08 +0000.
  */
 
 namespace App\Models;
@@ -13,6 +13,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * Class Post
  * 
  * @property int $id
+ * @property string $title
  * @property string $message
  * @property int $pushed_to_fb
  * @property int $user_id
@@ -20,6 +21,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property \Carbon\Carbon $updated_at
  * 
  * @property \App\Models\User $user
+ * @property \Illuminate\Database\Eloquent\Collection $facebook_posts
  * @property \Illuminate\Database\Eloquent\Collection $post_campaigns
  * @property \Illuminate\Database\Eloquent\Collection $post_images
  * @property \Illuminate\Database\Eloquent\Collection $post_videos
@@ -34,15 +36,20 @@ class Post extends Eloquent
 	];
 
 	protected $fillable = [
+		'title',
 		'message',
 		'pushed_to_fb',
-		'user_id',
-		'title',
+		'user_id'
 	];
 
 	public function user()
 	{
-		return $this->belongsTo(\App\User::class);
+		return $this->belongsTo(\App\Models\User::class);
+	}
+
+	public function facebook_posts()
+	{
+		return $this->hasMany(\App\Models\FacebookPost::class);
 	}
 
 	public function post_campaigns()

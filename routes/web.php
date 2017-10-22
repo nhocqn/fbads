@@ -33,6 +33,7 @@ Route::get('/facebook/push/posts/{id}', 'FaceBookController@fb_push_post');
 Route::post('/facebook/push/posts', 'FaceBookController@push_upload');
 
 Route::resource('posts', 'PostsController');
+Route::resource('facebook_posts', 'FacebookPostController');
 
 Route::post('post/add-image', ['as' => 'imageUpload', 'uses' => 'PostImageController@store']);
 Route::post('post/delete-image/{id}', ['as' => 'imageUpload', 'uses' => 'PostImageController@destroy']);

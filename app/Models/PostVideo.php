@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 21 Oct 2017 16:32:12 +0000.
+ * Date: Sun, 22 Oct 2017 09:17:08 +0000.
  */
 
 namespace App\Models;
@@ -15,6 +15,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $id
  * @property int $post_id
  * @property string $video_url
+ * @property int $is_url
  * @property int $user_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -28,19 +29,20 @@ class PostVideo extends Eloquent
 {
 	protected $casts = [
 		'post_id' => 'int',
+		'is_url' => 'int',
 		'user_id' => 'int'
 	];
 
 	protected $fillable = [
 		'post_id',
 		'video_url',
-		'user_id',
-        'is_url'
+		'is_url',
+		'user_id'
 	];
 
 	public function user()
 	{
-		return $this->belongsTo(\App\User::class);
+		return $this->belongsTo(\App\Models\User::class);
 	}
 
 	public function post()

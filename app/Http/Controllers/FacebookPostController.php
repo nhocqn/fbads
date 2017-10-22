@@ -2,31 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Models\Post;
-use App\Models\PostCampaign;
-use App\Models\PostImage;
-use App\Models\PostVideo;
+use App\Models\FacebookPost;
 use Illuminate\Http\Request;
 
-class PostsController extends Controller
+class FacebookPostController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-
-    public function __construct()
-
-    {
-
-        $this->middleware('auth');
-
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -38,12 +21,12 @@ class PostsController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $posts = Post::paginate($perPage);
+            $facebook_posts = FacebookPost::paginate($perPage);
         } else {
-            $posts = Post::paginate($perPage);
+            $facebook_posts = FacebookPost::paginate($perPage);
         }
 
-        return view('posts.index', compact('posts'));
+        return view('facebook_posts.index', compact('facebook_posts'));
     }
 
     /**
@@ -53,7 +36,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('facebook_posts.create');
     }
 
     /**
@@ -68,9 +51,9 @@ class PostsController extends Controller
 
         $requestData = $request->all();
 
-        Post::create($requestData);
-        $this->flashSuccess('Post added!');
-        return redirect('posts');
+        FacebookPost::create($requestData);
+        $this->flashSuccess('Facebook Post added!');
+        return redirect('facebook_posts');
     }
 
     /**
@@ -82,9 +65,9 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        $facebook_post = FacebookPost::findOrFail($id);
 
-        return view('posts.show', compact('post'));
+        return view('facebook_posts.show', compact('facebook_post'));
     }
 
     /**
@@ -96,9 +79,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
+        $facebook_post = FacebookPost::findOrFail($id);
 
-        return view('posts.edit', compact('post'));
+        return view('facebook_posts.edit', compact('facebook_post'));
     }
 
     /**
@@ -114,10 +97,10 @@ class PostsController extends Controller
 
         $requestData = $request->all();
 
-        $post = Post::findOrFail($id);
-        $post->update($requestData);
-        $this->flashSuccess('Post updated!');
-        return redirect('posts');
+        $facebook_post = FacebookPost::findOrFail($id);
+        $facebook_post->update($requestData);
+        $this->flashSuccess('Facebook Post updated!');
+        return redirect('facebook_posts');
     }
 
     /**
@@ -129,14 +112,8 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        PostCampaign::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
-        PostImage::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
-        PostVideo::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
-        Post::destroy($id);
-
-        $this->flashSuccess('Post deleted!');
-        return redirect('posts');
+        FacebookPost::destroy($id);
+        $this->flashSuccess('Facebook Post deleted!');
+        return redirect('facebook_posts');
     }
-
-
 }

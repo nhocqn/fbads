@@ -13,9 +13,11 @@
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
 
-                        <form method="GET" action="{{ url('/posts') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
+                        <form method="GET" action="{{ url('/posts') }}" accept-charset="UTF-8"
+                              class="navbar-form navbar-right" role="search">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                                <input type="text" class="form-control" name="search" placeholder="Search..."
+                                       value="{{ request('search') }}">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit">
                                         <i class="fa fa-search"></i>
@@ -29,25 +31,49 @@
                         <div class="table-responsive">
                             <table class="table table-borderless">
                                 <thead>
-                                    <tr>
-                                        <th>#</th><th>Title</th><th>Created At</th><th>Updated At</th><th>Actions</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th>Actions</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($posts as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->title or "NA" }}</td>
-                                        <td>{{ $item->created_at }}</td><td>{{ $item->updated_at }}</td>
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>{{ $item->updated_at }}</td>
                                         <td>
-                                            <a href="{{ url('facebook/push/posts/' . $item->id) }}" title="Push to facebook"><button class="btn btn-primary btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Facebook</button></a>
-                                            <a href="{{ url('/posts/' . $item->id) }}" title="View post"><button class="btn btn-default btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/posts/' . $item->id . '/edit') }}" title="Edit post"><button class="btn btn-info btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            <a href="{{ url('facebook/push/posts/' . $item->id) }}"
+                                               title="Push to facebook">
+                                                <button class="btn btn-primary btn-xs">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    {{ $item->pushed_to_fb == "1" ? "Already Pushed To " : "Not Pushed to" }}
+                                                    Facebook
+                                                </button>
+                                            </a>
+                                            <a href="{{ url('/posts/' . $item->id) }}" title="View post">
+                                                <button class="btn btn-default btn-xs">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i> View
+                                                </button>
+                                            </a>
+                                            <a href="{{ url('/posts/' . $item->id . '/edit') }}" title="Edit post">
+                                                <button class="btn btn-info btn-xs"><i class="fa fa-pencil-square-o"
+                                                                                       aria-hidden="true"></i> Edit
+                                                </button>
+                                            </a>
 
-                                            <form method="POST" action="{{ url('/posts' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            <form method="POST" action="{{ url('/posts' . '/' . $item->id) }}"
+                                                  accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete post" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete post"
+                                                        onclick="return confirm(&quot;Confirm delete?&quot;)"><i
+                                                            class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>

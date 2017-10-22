@@ -11,6 +11,16 @@
                         Posts
                     </a>
                 </li>
+                <li role="presentation">
+                    <a href="{{ url('/facebook_posts') }}">
+                        Fb Post
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url('/campaigns') }}">
+                        Fb Campaigns
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
