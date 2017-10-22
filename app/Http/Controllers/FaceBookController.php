@@ -94,7 +94,7 @@ class FaceBookController extends Controller
         // Log the user into Laravel
         Auth::login($user);
         User::where('id', \auth()->user()->id)->update(['access_token' => (string)$token]);
-        $this->flashSuccess("");
+        $this->flashSuccess("Successfully logged in with Facebook");
 
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }
@@ -197,7 +197,7 @@ class FaceBookController extends Controller
 
             $this->validate($request, [
                 'post_id' => 'required',
-             ]);
+            ]);
 
 
             $reqData = $request->all();
@@ -214,17 +214,23 @@ class FaceBookController extends Controller
                 ];
 
                 $this->feed_upload($data, $request->post_id);
+                $this->flashInfo('Facebook feed post was successful');
             }
 
             if (isset($reqData['video_post']) && $reqData['video_post'] == "on") {
                 $data = [
                     'title' => $request->title ? $request->title : '',
                     'description' => $request->description ? $request->description : "",
-                    'source' => $request->selected_video ? $fb->videoToUpload($request->selected_video) : '',
+                    'source' => $request->selected_vid ? $fb->videoToUpload($request->selected_vid) : '',
                 ];
 
                 if ($data['source'] != '') {
                     $this->video_upload($data, $request->post_id);
+                    $this->flashSuccess('Facebook video post was successful');
+                } else {
+
+                    $this->flashInfo('Video Source was not added and could not make the post');
+
                 }
             }
 
@@ -236,25 +242,92 @@ class FaceBookController extends Controller
                 ];
                 if ($data['source'] != '') {
                     $this->image_upload($data, $request->post_id);
+                    $this->flashSuccess('Facebook post was successful');
+                } else {
+                    $this->flashInfo(' Image Source was not added and could not make the post');
                 }
             }
         } catch (FacebookResponseException $e) {
             // When Graph returns an error
-            Log::info('Graph returned an error: ' .  $e->getMessage());
+            Log::info('Graph returned an error: ' . $e->getMessage());
             $this->flashError('Graph returned an error: ' . $e->getMessage());
             return redirect()->back();
         } catch (FacebookSDKException $e) {
             // When validation fails or other local issues
-            Log::info('Facebook SDK returned an error: ' .  $e->getMessage());
+            Log::info('Facebook SDK returned an error: ' . $e->getMessage());
             $this->flashError('Facebook SDK returned an error: ' . $e->getMessage());
             return redirect()->back();
+        } catch (\Exception $e) {
+            // When validation fails or other local issues
+            Log::info('App returned an error: ' . $e->getMessage());
+            $this->flashError('App returned an error: ' . $e->getMessage());
+            return redirect()->back();
+
         }
 
         Post::where('id', $request->post_id)->update([
             'pushed_to_fb' => 1
         ]);
-        $this->flashSuccess('Facebook post was successful');
+
         return redirect()->back();
     }
 
+
+    public function getFeedPost(Request $request)
+    {
+        try {
+            $fb = $this->fb;
+            $data = [
+                'message',
+                "link",
+                "picture",
+                "name",
+                "caption",
+                "description",
+            ];
+
+            $response = $fb->get($request->face_bk_id . "?pretty=0&fields=" . implode(',', $data), auth()->user()->access_token);
+
+            return json_encode($response->getGraphNode()->asArray());
+        } catch (\Exception $e) {
+            return json_encode(["Error " => $e->getMessage()]);
+        }
+    }
+
+    public function getImagePost(Request $request)
+    {
+        try {
+
+
+            $fb = $this->fb;
+            $data = [
+                'message',
+                'source'
+            ];
+
+            $response = $fb->get($request->face_bk_id . "?pretty=0&fields=" . implode(',', $data), auth()->user()->access_token);
+
+            return json_encode($response->getGraphNode()->asArray());
+        } catch (\Exception $e) {
+            return json_encode(["Error " => $e->getMessage()]);
+        }
+    }
+
+    public function getVideoPost(Request $request)
+    {
+        try {
+            $fb = $this->fb;
+            $data = [
+                'title',
+                'description',
+                'source',
+            ];
+
+            $response = $fb->get($request->face_bk_id . "?pretty=0&fields=" . implode(',', $data), auth()->user()->access_token);
+
+            return json_encode($response->getGraphNode()->asArray());
+        } catch (\Exception $e) {
+            return json_encode(["Error " => $e->getMessage()]);
+        }
+    }
 }

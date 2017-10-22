@@ -35,27 +35,32 @@ class PostImageController extends Controller
     public function store(Request $request)
     {
 
-        $this->validate($request, [
+        try {
+            $this->validate($request, [
 
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'post_id' => 'required',
-        ]);
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'post_id' => 'required',
+            ]);
 
-//        dd($request->all());
-        $image = $request->file('image');
+//
+            $image = $request->file('image');
 
-        $input['image_url'] = time() . '.' . $image->getClientOriginalExtension();
+            $input['image_url'] = time() . '.' . $image->getClientOriginalExtension();
 
-        $destinationPath = public_path('/images');
+            $destinationPath = public_path('/images');
 
-        $image->move($destinationPath, $input['image_url']);
+            $image->move($destinationPath, $input['image_url']);
 
-        $input['user_id'] = auth()->user()->id;
-        $input['post_id'] = $request->input('post_id');
+            $input['user_id'] = auth()->user()->id;
+            $input['post_id'] = $request->input('post_id');
 
-        PostImage::create($input);
-        $this->flashSuccess('Image Upload successful');
-        return redirect()->back();
+            PostImage::create($input);
+            $this->flashSuccess('Image Upload successful');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            $this->flashError($e->getMessage());
+            return redirect()->back();
+        }
     }
 
 

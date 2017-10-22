@@ -129,7 +129,7 @@
                                                 <div class="col-md-12 ">
                                                     <input type="radio" checked name="selected_image"
                                                            class="form-control"
-                                                           value="{{ url('images/'.$post_image->image_url)}}">
+                                                           value="{{ url('/images/'.$post_image->image_url)}}">
                                                 </div>
                                             </div>
 
@@ -173,7 +173,7 @@
 
 
                                                     <input type="radio" checked name="selected_vid" class="form-control"
-                                                           value="{{ url('videos/'.$post_vid->video_url)}}">
+                                                           value="{{ $post_vid->is_url > 0 ? $post_vid->video_url: url('/videos/'.$post_vid->video_url)}}">
 
 
                                                 </div>

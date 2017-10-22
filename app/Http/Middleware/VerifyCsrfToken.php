@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        '/facebook/load-post/image',
+        '/facebook/load-post/feed',
+        '/facebook/load-post/video',
     ];
 }

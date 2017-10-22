@@ -36,39 +36,41 @@ class PostVideoController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
+        try {
 
-        $this->validate($request, [
+            $this->validate($request, [
+                'video_url' => 'sometimes|mimetypes:video/avi,video/mp4,video/mpeg,video/quicktime',
+                'post_id' => 'required',
+                'user_id' => 'required',
+            ]);
 
-            'video_url' => 'sometimes|mimetypes:video/avi,video/mp4,video/mpeg,video/quicktime',
-            'post_id' => 'required',
-            'user_id' => 'required',
-        ]);
+
+            if (isset($request->is_url)) {
+                $input['video_url'] = $request->video_text_url;
+                $input['is_url'] = 1;
+            } else {
+                $video = $request->file('video');
+                $input['is_url'] = 0;
+                $input['video_url'] = time() . '.' . $video->getClientOriginalExtension();
+
+                $destinationPath = public_path('/videos');
+
+                $video->move($destinationPath, $input['video_url']);
+            }
 
 
-        if (isset($request->is_url)) {
-            $input['video_url'] = $request->video_text_url;
-            $input['is_url'] = 1;
-        } else {
-            $video = $request->file('video');
-            $input['is_url'] = 0;
-            $input['video_url'] = time() . '.' . $video->getClientOriginalExtension();
+            $input['user_id'] = auth()->user()->id;
+            $input['post_id'] = $request->input('post_id');
 
-            $destinationPath = public_path('/videos');
+            PostVideo::create($input);
+            $this->flashSuccess('Video Upload successful');
 
-            $video->move($destinationPath, $input['video_url']);
+            return redirect()->back();
+
+        } catch (\Exception $e) {
+            $this->flashError($e->getMessage());
+            return redirect()->back();
         }
-
-
-        $input['user_id'] = auth()->user()->id;
-        $input['post_id'] = $request->input('post_id');
-
-        PostVideo::create($input);
-        $this->flashSuccess('Video Upload successful');
-
-        return redirect()->back();
-
-
     }
 
 
