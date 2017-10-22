@@ -19,7 +19,7 @@ class FaceBookController extends Controller
     public function __construct(LaravelFacebookSdk $fb)
     {
         $this->fb = $fb;
-        $this->middleware('auth')->except('fb_login','fb_callback');
+        $this->middleware('auth')->except('fb_login', 'fb_callback');
     }
 
     public function fb_login()
@@ -99,8 +99,6 @@ class FaceBookController extends Controller
     }
 
 
-
-
     public function video_upload($data)
     {
         $fb = $this->fb;
@@ -133,55 +131,85 @@ class FaceBookController extends Controller
 
     }
 
-    public function feed_upload(Request $request)
+    public function feed_upload($data)
     {
         $fb = $this->fb;
+        return $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+    }
 
-        $this->validate($request, [
-            'type' => 'required',
-        ]);
+    public function fb_push_post($id)
+    {
+        $post = Post::findOrFail($id);
 
+        return view('posts.facebook', compact('post'));
+    }
+
+    public function push_upload(Request $request)
+    {
         /*
-         * video
-         * $data = [
-            'title' => $request->title,
-            'description' => $request->description,
-            'source' => $fb->videoToUpload($request->video_url),
-        ];
-         *
-         *image
-         * $data = [
-            'message' => $request->message,
-            'source' => $fb->fileToUpload($request->image_url)
-        ];
-         *  feed
-         * $data = [
-            'message' => $request->message,
-            "link" => "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
-            "picture" => "http://i.imgur.com/lHkOsiH.png",
-            "name" => "How to Auto Post on Facebook with PHP",
-            "caption" => "www.pontikis.net",
-            "description" => "Automatically post on Facebook with PHP using Facebook PHP SDK. How to create a Facebook app. Obtain and extend Facebook access tokens. Cron automation."
+       * video
+       * $data = [
+          'title' => $request->title,
+          'description' => $request->description,
+          'source' => $fb->videoToUpload($request->video_url),
+      ];
+       *
+       *image
+       * $data = [
+          'message' => $request->message,
+          'source' => $fb->fileToUpload($request->image_url)
+      ];
+       *  feed
+       * $data = [
+          'message' => $request->message,
+          "link" => "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
+          "picture" => "http://i.imgur.com/lHkOsiH.png",
+          "name" => "How to Auto Post on Facebook with PHP",
+          "caption" => "www.pontikis.net",
+          "description" => "Automatically post on Facebook with PHP using Facebook PHP SDK. How to create a Facebook app. Obtain and extend Facebook access tokens. Cron automation."
 
-        ];
-         * */
-        $data = [
-            'message' => $request->message,
-            "link" => "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
-            "picture" => "http://i.imgur.com/lHkOsiH.png",
-            "name" => "How to Auto Post on Facebook with PHP",
-            "caption" => "www.pontikis.net",
-            "description" => "Automatically post on Facebook with PHP using Facebook PHP SDK. How to create a Facebook app. Obtain and extend Facebook access tokens. Cron automation.",
-            'source' => $fb->fileToUpload($request->image_url),
-            'title' => $request->title,
-
-
-        ];
-
-
+      ];
+       * */
         try {
-            // Returns a `Facebook\FacebookResponse` object
-            $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+            dd($request->all());
+            $reqData = $request->all();
+            $fb = $this->fb;
+
+            if (isset($reqData['feed_post']) && $reqData['feed_post'] == "on") {
+                $data = [
+                    'message' => $request->message ? $request->message : '',
+                    "link" => $request->link ? $request->link : '',# "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
+                    "picture" => $request->selected_image ? $request->selected_image : '',
+                    "name" => $request->name ? $request->name : '',
+                    "caption" => $request->caption ? $request->caption : '',
+                    "description" => $request->dedscription ? $request->dedscription : '',
+                ];
+
+                $this->feed_upload($data);
+            }
+
+            if (isset($reqData['video_post']) && $reqData['video_post'] == "on") {
+                $data = [
+                    'title' => $request->title ? $request->title : '',
+                    'description' => $request->description ? $request->description : "",
+                    'source' => $request->selected_video ? $fb->videoToUpload($request->selected_video) : '',
+                ];
+
+                if ($data['source'] != '') {
+                    $this->video_upload($data);
+                }
+            }
+
+
+            if (isset($reqData['image_post']) && $reqData['image_post'] == "on") {
+                $data = [
+                    'message' => $request->message ? $request->message : "",
+                    'source' => $request->selected_image ? $fb->fileToUpload($request->selected_image) : ''
+                ];
+                if ($data['source'] != '') {
+                    $this->image_upload($data);
+                }
+            }
         } catch (FacebookResponseException $e) {
             // When Graph returns an error
             $this->flashError('Graph returned an error: ' . $e->getMessage());
@@ -192,17 +220,10 @@ class FaceBookController extends Controller
             return redirect()->back();
         }
 
-        $graphNode = $response->getGraphNode();
-        Log::info(print_r($graphNode, true));
-        $this->flashSuccess('Posted to facebook successfully!');
+
+
+        $this->flashError('Facebook post was successful');
         return redirect()->back();
-    }
-
-    public function fb_push_post($id)
-    {
-        $post = Post::findOrFail($id);
-
-        return view('posts.facebook', compact('post'));
     }
 
 }

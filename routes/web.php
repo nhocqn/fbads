@@ -30,9 +30,7 @@ Route::get('/facebook/upload-pictures', 'FaceBookController@fb_callback');
 Route::get('/facebook/upload-videos', 'FaceBookController@fb_callback');
 
 Route::get('/facebook/push/posts/{id}', 'FaceBookController@fb_push_post');
-Route::post('/facebook/push/image-posts', 'FaceBookController@image_upload');
-Route::post('/facebook/push/video-posts', 'FaceBookController@video_upload');
-Route::post('/facebook/push/status-posts', 'FaceBookController@status_upload');
+Route::post('/facebook/push/posts', 'FaceBookController@push_upload');
 
 Route::resource('posts', 'PostsController');
 
