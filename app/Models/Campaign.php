@@ -10,39 +10,31 @@ namespace App\Models;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class PostCampaign
+ * Class Campaign
  * 
  * @property int $id
- * @property string $campaign_name
- * @property int $post_id
- * @property string $identifier
- * @property int $user_id
+ * @property string $name
+ * @property string $objective
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property int $user_id
  * 
- * @property \App\Models\Post $post
  * @property \App\Models\User $user
  *
  * @package App\Models
  */
-class PostCampaign extends Eloquent
+class Campaign extends Eloquent
 {
 	protected $casts = [
-		'post_id' => 'int',
 		'user_id' => 'int'
 	];
 
 	protected $fillable = [
-		'campaign_name',
-		'post_id',
-		'identifier',
-		'user_id'
+		'name',
+//		'objective',
+		'user_id',
+		'ref'
 	];
-
-	public function post()
-	{
-		return $this->belongsTo(\App\Models\Post::class);
-	}
 
 	public function user()
 	{

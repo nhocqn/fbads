@@ -37,7 +37,8 @@ Route::post('/facebook/load-post/image', 'FaceBookController@getImagePost');
 Route::post('/facebook/load-post/feed', 'FaceBookController@getFeedPost');
 Route::post('/facebook/load-post/video', 'FaceBookController@getVideoPost');
 
-Route::resource('posts', 'PostsController');
+Route::resource('campaigns', 'CampaignController');
+Route::resource('facebook_posts', 'FacebookPostController');
 Route::resource('facebook_posts', 'FacebookPostController');
 
 Route::post('post/add-image', ['as' => 'imageUpload', 'uses' => 'PostImageController@store']);
