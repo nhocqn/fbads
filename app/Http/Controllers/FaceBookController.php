@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,8 +13,16 @@ use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
 
 class FaceBookController extends Controller
 {
-    public function fb_login(LaravelFacebookSdk $fb)
+    public $fb;
+
+    public function __construct(LaravelFacebookSdk $fb)
     {
+        $this->fb = $fb;
+    }
+
+    public function fb_login()
+    {
+        $fb = $this->fb;
         // Send an array of permissions to request
         $login_url = $fb->getLoginUrl();
 
@@ -86,4 +95,112 @@ class FaceBookController extends Controller
 
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }
+
+ 
+
+
+    public function video_upload($data)
+    {
+        $fb = $this->fb;
+
+        return $fb->post('/me/videos', $data, auth()->user()->access_token);
+
+//        try {
+//            $response = $fb->post('/me/videos', $data, auth()->user()->access_token);
+//        } catch (FacebookResponseException $e) {
+//            // When Graph returns an error
+//            $this->flashError('Graph returned an error: ' . $e->getMessage());
+//            return redirect()->back();
+//        } catch (FacebookSDKException $e) {
+//            // When validation fails or other local issues
+//            $this->flashError('Facebook SDK returned an error: ' . $e->getMessage());
+//            return redirect()->back();
+//        }
+//
+//        $graphNode = $response->getGraphNode();
+//        Log::info(print_r($graphNode, true));
+//        $this->flashSuccess('Posted to facebook successfully!');
+//        return redirect()->back();
+    }
+
+    public function image_upload($data)
+    {
+        $fb = $this->fb;
+        // Returns a `Facebook\FacebookResponse` object
+        return $response = $fb->post('/me/photos', $data, auth()->user()->access_token);
+
+    }
+
+    public function feed_upload(Request $request)
+    {
+        $fb = $this->fb;
+
+        $this->validate($request, [
+            'type' => 'required',
+        ]);
+
+        /*
+         * video
+         * $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'source' => $fb->videoToUpload($request->video_url),
+        ];
+         *
+         *image
+         * $data = [
+            'message' => $request->message,
+            'source' => $fb->fileToUpload($request->image_url)
+        ];
+         *  feed
+         * $data = [
+            'message' => $request->message,
+            "link" => "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
+            "picture" => "http://i.imgur.com/lHkOsiH.png",
+            "name" => "How to Auto Post on Facebook with PHP",
+            "caption" => "www.pontikis.net",
+            "description" => "Automatically post on Facebook with PHP using Facebook PHP SDK. How to create a Facebook app. Obtain and extend Facebook access tokens. Cron automation."
+
+        ];
+         * */
+        $data = [
+            'message' => $request->message,
+            "link" => "http://www.pontikis.net/blog/auto_post_on_facebook_with_php",
+            "picture" => "http://i.imgur.com/lHkOsiH.png",
+            "name" => "How to Auto Post on Facebook with PHP",
+            "caption" => "www.pontikis.net",
+            "description" => "Automatically post on Facebook with PHP using Facebook PHP SDK. How to create a Facebook app. Obtain and extend Facebook access tokens. Cron automation.",
+            'source' => $fb->fileToUpload($request->image_url),
+            'title' => $request->title,
+
+
+        ];
+
+
+        try {
+            // Returns a `Facebook\FacebookResponse` object
+            $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+        } catch (FacebookResponseException $e) {
+            // When Graph returns an error
+            $this->flashError('Graph returned an error: ' . $e->getMessage());
+            return redirect()->back();
+        } catch (FacebookSDKException $e) {
+            // When validation fails or other local issues
+            $this->flashError('Facebook SDK returned an error: ' . $e->getMessage());
+            return redirect()->back();
+        }
+
+        $graphNode = $response->getGraphNode();
+        Log::info(print_r($graphNode, true));
+        $this->flashSuccess('Posted to facebook successfully!');
+        return redirect()->back();
+    }
+
+    public function fb_push_post($id)
+    {
+        $post = Post::findOrFail($id);
+
+        return view('posts.facebook', compact('post'));
+    }
+
 }
