@@ -10,43 +10,41 @@ namespace App\Models;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class PostVideo
+ * Class AdVideo
  * 
  * @property int $id
- * @property int $post_id
- * @property string $video_url
- * @property int $is_url
  * @property int $user_id
+ * @property string $page_id
+ * @property string $video_path
+ * @property string $video_id
+ * @property string $thumbnail_url
+ * @property string $ad_creative_name
+ * @property string $ref
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * 
- * @property \App\Models\User $user
- * @property \App\Models\Post $post
+ * @property \App\User $user
  *
  * @package App\Models
  */
-class PostVideo extends Eloquent
+class AdVideo extends Eloquent
 {
 	protected $casts = [
-		'post_id' => 'int',
-		'is_url' => 'int',
 		'user_id' => 'int'
 	];
 
 	protected $fillable = [
-		'post_id',
-		'video_url',
-		'is_url',
-		'user_id'
+		'user_id',
+		'page_id',
+		'video_path',
+		'video_id',
+		'thumbnail_url',
+		'ad_creative_name',
+		'ref'
 	];
 
 	public function user()
 	{
-		return $this->belongsTo(\App\Models\User::class);
-	}
-
-	public function post()
-	{
-		return $this->belongsTo(\App\Models\Post::class);
+		return $this->belongsTo(\App\User::class);
 	}
 }

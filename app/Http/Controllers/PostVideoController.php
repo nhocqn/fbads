@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
-use App\Models\PostVideo;
+ use App\Models\PostVideo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class PostVideoController extends Controller
 {
@@ -89,4 +87,7 @@ class PostVideoController extends Controller
 
         return redirect()->back();
     }
+
+
+
 }

@@ -20,9 +20,22 @@
                     <a href="{{ url('/campaigns') }}">
                         Fb Campaigns
                     </a>
-                </li><li role="presentation">
+                </li>
+                <li role="presentation">
                     <a href="{{ url('/adsets') }}">
                         Fb Adsets
+                    </a>
+                </li>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url('/ad_images') }}">
+                        Ad Images
+                    </a>
+                </li>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url('/ad_videos') }}">
+                        Ad Videos
                     </a>
                 </li>
             </ul>

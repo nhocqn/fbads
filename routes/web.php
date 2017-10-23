@@ -40,6 +40,8 @@ Route::post('/facebook/load-post/video', 'FaceBookController@getVideoPost');
 Route::resource('campaigns', 'CampaignController');
 Route::resource('posts', 'PostsController');
 Route::resource('adsets', 'AdsetController');
+Route::resource('ad_videos', 'AdVideoController');
+Route::resource('ad_images', 'AdImageController');
 Route::resource('facebook_posts', 'FacebookPostController');
 
 Route::post('post/add-image', ['as' => 'imageUpload', 'uses' => 'PostImageController@store']);

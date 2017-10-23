@@ -162,7 +162,22 @@ function multi_unset($array, $keys)
 
 function getAllCampaigns()
 {
-    return \App\Models\Campaign::pluck('name', 'id')->toArray();
+    return \App\Models\Campaign::where('user_id', auth()->user()->id)->pluck('name', 'id')->toArray();
+}
+
+function getAllAdsets()
+{
+    return \App\Models\Adset::pluck('adset_name', 'id')->toArray();
+}
+
+function getAllPostVideos()
+{
+    return \App\Models\PostVideo::all();
+}
+
+function getAllPostImages()
+{
+    return \App\Models\PostImage::all();
 }
 
 function encrypt_decrypt($action, $string)

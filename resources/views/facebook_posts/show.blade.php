@@ -58,22 +58,7 @@
                             </table>
                         </div>
 
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}', '0')">
-                            Load Image From Facebook
-                        </button>
 
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','1')">
-                            Load Feed From Facebook
-                        </button>
-
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','2')">
-                            Load Video From Facebook
-                        </button>
-
-                        <br> <br>
 
                         <button class="btn btn-success btn-sm col-md-3 m-sm"
                                 onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}', '0')">
