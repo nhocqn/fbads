@@ -36,7 +36,9 @@ class FacebookPost extends Eloquent
 		'facebook_post_id',
 		'post_id',
 		'meta',
-		'user_id'
+		'user_id',
+        'page_id',
+        'type',
 	];
 
 	public function post()

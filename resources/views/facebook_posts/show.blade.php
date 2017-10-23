@@ -47,6 +47,14 @@
                                     <td> {{ $facebook_post->facebook_post_id }} </td>
                                 </tr>
                                 <tr>
+                                    <th> Facebook Post Type</th>
+                                    <td> {{ getPostType($facebook_post->type) }} </td>
+                                </tr>
+                                <tr>
+                                    <th> Facebook Page Id</th>
+                                    <td> {{ $facebook_post->page_id }} </td>
+                                </tr>
+                                <tr>
                                     <th> Created At</th>
                                     <td> {{ $facebook_post->created_at }} </td>
                                 </tr>
@@ -58,22 +66,25 @@
                             </table>
                         </div>
 
+                        @if($facebook_post->type == 1)
+                            <button class="btn btn-success btn-sm col-md-3 m-sm"
+                                    onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}', '0')">
+                                Load Image From Facebook
+                            </button>
+                        @endif
+                        @if($facebook_post->type == 0)
+                            <button class="btn btn-success btn-sm col-md-3 m-sm"
+                                    onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','1')">
+                                Load Feed From Facebook
+                            </button>
+                        @endif
+                        @if($facebook_post->type == 2)
 
-
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}', '0')">
-                            Load Image From Facebook
-                        </button>
-
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','1')">
-                            Load Feed From Facebook
-                        </button>
-
-                        <button class="btn btn-success btn-sm col-md-3 m-sm"
-                                onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','2')">
-                            Load Video From Facebook
-                        </button>
+                            <button class="btn btn-success btn-sm col-md-3 m-sm"
+                                    onclick="loadJsonFb('{{$facebook_post->facebook_post_id }}','2')">
+                                Load Video From Facebook
+                            </button>
+                        @endif
 
                         <br> <br>
                         <br> <br>

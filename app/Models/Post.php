@@ -39,7 +39,8 @@ class Post extends Eloquent
 		'title',
 		'message',
 		'pushed_to_fb',
-		'user_id'
+		'user_id',
+        'page_id',
 	];
 
 	public function user()

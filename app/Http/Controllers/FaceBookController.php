@@ -99,26 +99,28 @@ class FaceBookController extends Controller
         return redirect('/home')->with('message', 'Successfully logged in with Facebook');
     }
 
-    public function save_to_fb_feed($data, $response, $post_id)
+    public function save_to_fb_feed($data, $response, $post_id, $page_id, $type)
     {
-
+//type= 0 : feed, 1: image, 2 : video
         FacebookPost::create([
             'facebook_post_id' => $response['id'] ? $response['id'] : null,
             'post_id' => $post_id,
+            'page_id' => $page_id,
+            'type' => $type,
             'meta' => json_encode($data),
             'user_id' => \auth()->user()->id,
         ]);
 
     }
 
-    public function video_upload($data, $post_id)
+    public function video_upload($data, $post_id, $page_id)
     {
         $fb = $this->fb;
 
-        $response = $fb->post('/me/videos', $data, auth()->user()->access_token);
+        $response = $fb->post("/$page_id/videos", $data, auth()->user()->access_token);
         $graphNode = $response->getGraphNode()->asArray();
         Log::info(print_r($graphNode, true));
-        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        $this->save_to_fb_feed($data, $graphNode, $post_id, $page_id, 2);
         return $graphNode;
 //        try {
 //            $response = $fb->post('/me/videos', $data, auth()->user()->access_token);
@@ -138,24 +140,24 @@ class FaceBookController extends Controller
 //        return redirect()->back();
     }
 
-    public function image_upload($data, $post_id)
+    public function image_upload($data, $post_id, $page_id)
     {
         $fb = $this->fb;
         // Returns a `Facebook\FacebookResponse` object
-        $response = $fb->post('/me/photos', $data, auth()->user()->access_token);
+        $response = $fb->post("/$page_id/photos", $data, auth()->user()->access_token);
         $graphNode = $response->getGraphNode()->asArray();
         Log::info(print_r($graphNode, true));
-        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        $this->save_to_fb_feed($data, $graphNode, $post_id, $page_id, 1);
         return $graphNode;
     }
 
-    public function feed_upload($data, $post_id)
+    public function feed_upload($data, $post_id, $page_id)
     {
         $fb = $this->fb;
-        $response = $fb->post('/me/feed', $data, auth()->user()->access_token);
+        $response = $fb->post("/$page_id/feed", $data, auth()->user()->access_token);
         $graphNode = $response->getGraphNode();
         Log::info(print_r($graphNode, true));
-        $this->save_to_fb_feed($data, $graphNode, $post_id);
+        $this->save_to_fb_feed($data, $graphNode, $post_id, $page_id, 0);
         return $graphNode;
     }
 
@@ -197,6 +199,7 @@ class FaceBookController extends Controller
 
             $this->validate($request, [
                 'post_id' => 'required',
+                'page_id' => 'required',
             ]);
 
 
@@ -213,7 +216,7 @@ class FaceBookController extends Controller
                     "description" => $request->dedscription ? $request->dedscription : '',
                 ];
 
-                $this->feed_upload($data, $request->post_id);
+                $this->feed_upload($data, $request->post_id, $request->page_id);
                 $this->flashInfo('Facebook feed post was successful');
             }
 
@@ -225,7 +228,7 @@ class FaceBookController extends Controller
                 ];
 
                 if ($data['source'] != '') {
-                    $this->video_upload($data, $request->post_id);
+                    $this->video_upload($data, $request->post_id, $request->page_id);
                     $this->flashSuccess('Facebook video post was successful');
                 } else {
 
@@ -241,7 +244,7 @@ class FaceBookController extends Controller
                     'source' => $request->selected_image ? $fb->fileToUpload($request->selected_image) : ''
                 ];
                 if ($data['source'] != '') {
-                    $this->image_upload($data, $request->post_id);
+                    $this->image_upload($data, $request->post_id, $request->page_id);
                     $this->flashSuccess('Facebook post was successful');
                 } else {
                     $this->flashInfo(' Image Source was not added and could not make the post');
@@ -301,7 +304,7 @@ class FaceBookController extends Controller
 
             $fb = $this->fb;
             $data = [
-                'message',
+                'id',
                 'source'
             ];
 

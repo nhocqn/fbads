@@ -61,6 +61,14 @@
                                                        class="form-control">
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <th>Page ID</th>
+                                            <td><code> all </code>
+                                                <input name="page_id" value="{{ $post->page_id or "" }}"
+                                                       class="form-control">
+                                            </td>
+                                        </tr>
                                         <tr class="feed_only">
                                             <th>Caption</th>
                                             <td>

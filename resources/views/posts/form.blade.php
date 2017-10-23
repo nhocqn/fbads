@@ -5,8 +5,15 @@
         {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
+<div class="form-group {{ $errors->has('page_id') ? 'has-error' : ''}}">
+    <label for="page_id"  class="col-md-4 control-label">{{ 'Page ID' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" required  name="page_id" type="text" id="page_id" value="{{ $post->page_id or ''}}">
+        {!! $errors->first('page_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
 <div class="form-group {{ $errors->has('message') ? 'has-error' : ''}}">
-    <label for="message" class="col-md-4 control-label">{{ 'Messagw' }}</label>
+    <label for="message" class="col-md-4 control-label">{{ 'Message' }}</label>
     <div class="col-md-6">
         <textarea required class="form-control" rows="5" name="message" type="textarea"
                   id="message">{{ $post->message or ''}}</textarea>

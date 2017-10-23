@@ -16,6 +16,7 @@ use FacebookAds\Object\Fields\AdCreativeVideoDataFields;
 use FacebookAds\Object\Fields\AdVideoFields;
 use FacebookAds\Object\Values\AdCreativeCallToActionTypeValues;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdVideoController extends Controller
 {
@@ -80,8 +81,20 @@ class AdVideoController extends Controller
 //            dd($requestData);
             $page_id = $request->page_id;
             $video_path = $request->video_path;
+            $video_id = $request->video_id;
+//            $path_array = explode('.', $video_path);
             $thumbnail_url = $request->thumbnail_url;
+            $path_array_thum = explode('.', $thumbnail_url);
+
             $ad_creative_name = $request->ad_creative_name;
+
+//            $tmp = tempnam(__DIR__, 'fbu');
+//            $ext = end($path_array);
+//            file_put_contents($tmp . "." . $ext, file_get_contents($video_path));
+
+//            $tmp_thum = tempnam(__DIR__, 'fbuthum');
+//            $ext_thum = end($path_array_thum);
+//            file_put_contents($tmp_thum . "." . $ext_thum, file_get_contents($thumbnail_url));
 
             Api::init(
                 env('FACEBOOK_APP_ID', null),
@@ -91,13 +104,16 @@ class AdVideoController extends Controller
             );
             $acct_id = env('AD_ACCOUNT_ID', null);
             if ($acct_id) {
-                $video = new AdVideo(null, "act_$acct_id");
-                $video->{AdVideoFields::SOURCE} = $video_path;
-                $video->create();
-                $vidArray = $video->exportAllData();
-                $video_id = $vidArray['id'];
+//                $video = new AdVideo(null, "act_$acct_id");
+//                $video->{AdVideoFields::SOURCE} = $tmp . "." . $ext;
+//                Log::info('b4 video create');
+//                $video->create();
+                Log::info('after video create');
+//                $vidArray = $video->exportAllData();
+//                $video_id = $vidArray['id'];
 
                 // create the creative
+                Log::info('at create the creative');
                 $video_data = new AdCreativeVideoData();
                 $video_data->setData(array(
                     AdCreativeVideoDataFields::IMAGE_URL => $thumbnail_url,
@@ -110,6 +126,7 @@ class AdVideoController extends Controller
                     ),
                 ));
 
+                Log::info('at $object_story_spec');
                 $object_story_spec = new AdCreativeObjectStorySpec();
                 $object_story_spec->setData(array(
                     AdCreativeObjectStorySpecFields::PAGE_ID => $page_id,
@@ -117,14 +134,14 @@ class AdVideoController extends Controller
                 ));
 
                 $creative = new AdCreative(null, "act_$acct_id");
-
+                Log::info('at creative');
                 $creative->setData(array(
                     AdCreativeFields::NAME => $ad_creative_name,
                     AdCreativeFields::OBJECT_STORY_SPEC => $object_story_spec,
                 ));
-
+                Log::info('created creative');
                 $creArr = $creative->create();
-
+                Log::info('created creative');
                 $requestData['ref'] = $creArr['id'];
                 $requestData['video_id'] = $video_id;
                 $requestData['user_id'] = auth()->user()->id;
@@ -136,8 +153,9 @@ class AdVideoController extends Controller
             $this->flashError("Invalid Account ID");
             return redirect()->back();
         } catch (\Exception $e) {
-            $this->flashError("Error:: " . $e->getMessage());
-            return redirect()->back();
+            var_dump($e);
+//            $this->flashError("Error:: " . $e->getMessage());
+//            return redirect()->back();
         }
     }
 

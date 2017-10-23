@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\FacebookPost;
 use App\Models\Post;
 use App\Models\PostCampaign;
 use App\Models\PostImage;
@@ -132,6 +133,7 @@ class PostsController extends Controller
         PostCampaign::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
         PostImage::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
         PostVideo::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
+        FacebookPost::where('post_id', $id)->where('user_id', auth()->user()->id)->delete();
         Post::destroy($id);
 
         $this->flashSuccess('Post deleted!');

@@ -104,6 +104,10 @@
                                         <td>{{ $post->title }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Page ID</th>
+                                        <td>{{ $post->page_id }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Message</th>
                                         <td>{{ $post->message }}</td>
                                     </tr>
@@ -164,10 +168,10 @@
                                 @if($post->post_videos->count() > 0)
 
                                     @foreach($post->post_videos as $post_vid)
-                                         <div class="col-xs-12 col-sm-6 col-md-6 ">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 ">
                                             <div class="col-md-12 ">
                                                 @if($post_vid->is_url == "0")
-                                                     <video width="340" height="240" controls>
+                                                    <video width="340" height="240" controls>
                                                         <source src="{{ url('/videos').'/'.$post_vid->video_url }}"
                                                                 type="video/mp4">
                                                         Your browser does not support the video tag.

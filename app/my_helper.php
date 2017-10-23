@@ -175,6 +175,17 @@ function getAllPostVideos()
     return \App\Models\PostVideo::all();
 }
 
+function getPostType($type)
+{
+    if ($type == 0) {
+        return "Feed";
+    } elseif ($type == 1) {
+        return "Photo";
+    } else {
+        return "Video";
+    }
+}
+
 function getAllPostImages()
 {
     return \App\Models\PostImage::all();
