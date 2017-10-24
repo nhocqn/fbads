@@ -7,7 +7,7 @@
 
             <div class="col-md-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading">ad_video {{ $ad_video->id }}</div>
+                    <div class="panel-heading">Ad Video : {{ $ad_video->id }}</div>
                     <div class="panel-body">
 
                         <a href="{{ url('/ad_videos') }}" title="Back">
@@ -42,17 +42,36 @@
                                     <td>{{ $ad_video->id }}</td>
                                 </tr>
                                 <tr>
-                                    <th> Image Path</th>
-                                    <td> {{ $ad_video->image_path }} </td>
+                                    <th> Thumbnail</th>
+                                    <td><img src="{{ $ad_video->thumbnail_url }}" style="width: 200px;height: 200px;" class="img-responsive"
+                                             alt="video thumbnail"></td>
                                 </tr>
                                 <tr>
                                     <th> Object Url</th>
-                                    <td> {{ $ad_video->object_url }} </td>
+                                    <td> {{ $ad_video->object_url or "NA" }} </td>
+                                </tr>
+                                <tr>
+                                    <th> Ad Creative Title</th>
+                                    <td> {{ $ad_video->ad_creative_name or "NA" }} </td>
                                 </tr>
                                 <tr>
                                     <th> Ad Creative Body</th>
-                                    <td> {{ $ad_video->ad_creative_body }} </td>
+                                    <td> {{ $ad_video->ad_creative_body or "NA" }} </td>
                                 </tr>
+                                <tr>
+                                    <th> Adset</th>
+                                    <td> {{ $ad_video->adset ? $ad_video->adset->adset_name: "NA" }} </td>
+                                </tr>
+                                <tr>
+                                    <th> Page ID</th>
+                                    <td> {{ $ad_video->page_id or "NA" }} </td>
+                                </tr>
+
+                                <tr>
+                                    <th> Video ID</th>
+                                    <td> {{ $ad_video->video_id or "NA" }} </td>
+                                </tr>
+
                                 </tbody>
                             </table>
                         </div>

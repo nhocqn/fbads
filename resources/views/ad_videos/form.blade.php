@@ -26,14 +26,14 @@
         {!! $errors->first('video_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
-<div class="form-group {{ $errors->has('object_url') ? 'has-error' : ''}}">
-    <label for="object_url" class="col-md-4 control-label">{{ 'Object Url (e.g your website address )' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="object_url" type="text" id="object_url"
-               value="{{ $ad_video->object_url or old('object_url')}}">
-        {!! $errors->first('object_url', '<p class="help-block">:message</p>') !!}
-    </div>
-</div>
+{{--<div class="form-group {{ $errors->has('object_url') ? 'has-error' : ''}}">--}}
+    {{--<label for="object_url" class="col-md-4 control-label">{{ 'Object Url (e.g your website address )' }}</label>--}}
+    {{--<div class="col-md-6">--}}
+        {{--<input class="form-control" name="object_url" type="text" id="object_url"--}}
+               {{--value="{{ $ad_video->object_url or old('object_url')}}">--}}
+        {{--{!! $errors->first('object_url', '<p class="help-block">:message</p>') !!}--}}
+    {{--</div>--}}
+{{--</div>--}}
 <div class="form-group {{ $errors->has('ad_creative_body') ? 'has-error' : ''}}">
     <label for="ad_creative_body" class="col-md-4 control-label">{{ 'Ad Creative Body' }}</label>
     <div class="col-md-6">
@@ -53,15 +53,31 @@
 <div class="form-group {{ $errors->has('ad_name') ? 'has-error' : ''}}">
     <label for="ad_name" class="col-md-4 control-label">{{ 'Ad Name' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="ad_name" type="text" id="ad_name" value="{{ $ad_video->ad_name or old('ad_name')}}">
+        <input class="form-control" name="ad_name" type="text" id="ad_name"
+               value="{{ $ad_video->ad_name or old('ad_name')}}">
         {!! $errors->first('ad_name', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 <div class="form-group {{ $errors->has('page_id') ? 'has-error' : ''}}">
     <label for="page_id" class="col-md-4 control-label">{{ 'Page ID' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="page_id" type="text" id="page_id" value="{{ $ad_video->page_id or old('page_id')}}">
+        <input class="form-control" name="page_id" type="text" id="page_id"
+               value="{{ $ad_video->page_id or old('page_id')}}">
         {!! $errors->first('page_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('adset_id') ? 'has-error' : ''}}">
+    <label for="adset_id" class="col-md-4 control-label">{{ 'Adset Id' }}</label>
+    <div class="col-md-6">
+        <?php
+        $adsets = getAllAdsets();
+        ?>
+        <select class="form-control" required name="adset_id">
+            @foreach($adsets as $key => $adset)
+                <option value="{{$key}}">{{$adset}}</option>
+            @endforeach
+        </select>
+
     </div>
 </div>
 

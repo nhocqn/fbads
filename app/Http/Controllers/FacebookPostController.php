@@ -10,6 +10,20 @@ use Illuminate\Http\Request;
 
 class FacebookPostController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+
+    public function __construct()
+
+    {
+
+        $this->middleware('auth');
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,10 +48,10 @@ class FacebookPostController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
-        return view('facebook_posts.create');
-    }
+//    public function create()
+//    {
+//        return view('facebook_posts.create');
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -46,15 +60,15 @@ class FacebookPostController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
-
-        $requestData = $request->all();
-
-        FacebookPost::create($requestData);
-        $this->flashSuccess('Facebook Post added!');
-        return redirect('facebook_posts');
-    }
+//    public function store(Request $request)
+//    {
+//
+//        $requestData = $request->all();
+//
+//        FacebookPost::create($requestData);
+//        $this->flashSuccess('Facebook Post added!');
+//        return redirect('facebook_posts');
+//    }
 
     /**
      * Display the specified resource.

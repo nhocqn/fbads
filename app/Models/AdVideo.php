@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class AdVideo
- * 
+ *
  * @property int $id
  * @property int $user_id
  * @property string $page_id
@@ -22,29 +22,38 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $ref
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * 
+ *
  * @property \App\User $user
  *
  * @package App\Models
  */
 class AdVideo extends Eloquent
 {
-	protected $casts = [
-		'user_id' => 'int'
-	];
+    protected $casts = [
+        'user_id' => 'int'
+    ];
 
-	protected $fillable = [
-		'user_id',
-		'page_id',
-		'video_path',
-		'video_id',
-		'thumbnail_url',
-		'ad_creative_name',
-		'ref'
-	];
+    protected $fillable = [
+        'user_id',
+        'page_id',
+        'video_path',
+        'video_id',
+        'thumbnail_url',
+        'ad_creative_name',
+        'ref',
+        'creative_id',
+        'adset_id',
+        'object_url',
+        'ad_creative_body'
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(\App\User::class);
-	}
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
+
+    public function adset()
+    {
+        return $this->belongsTo(\App\Models\Adset::class);
+    }
 }

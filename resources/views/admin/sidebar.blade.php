@@ -26,13 +26,11 @@
                         Fb Adsets
                     </a>
                 </li>
-                </li>
-                <li role="presentation">
-                    <a href="{{ url('/ad_images') }}">
-                        Ad Images
-                    </a>
-                </li>
-                </li>
+                {{--<li role="presentation">--}}
+                    {{--<a href="{{ url('/ad_images') }}">--}}
+                        {{--Ad Images--}}
+                    {{--</a>--}}
+                {{--</li>--}}
                 <li role="presentation">
                     <a href="{{ url('/ad_videos') }}">
                         Ad Videos

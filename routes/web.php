@@ -49,3 +49,7 @@ Route::post('post/delete-image/{id}', ['as' => 'imageUpload', 'uses' => 'PostIma
 
 Route::post('post/add-video', ['as' => 'videoUpload', 'uses' => 'PostVideoController@store']);
 Route::post('post/delete-video/{id}', ['as' => 'videoUpload', 'uses' => 'PostVideoController@destroy']);
+
+Route::get('/facebook_posts/create', function () {
+    return redirect()->to(url('/not-found'));
+});

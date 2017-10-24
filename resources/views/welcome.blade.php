@@ -69,7 +69,7 @@
 
     <div class="top-right links">
         @auth
-        <a href="{{ url('/home') }}">Home</a>
+        <a href="{{ url('/posts') }}">Go Back To App</a>
         @else
             <a href="{{ url('/facebook/login') }}">Login</a>
             {{--                <a href="{{ route('register') }}">Register</a>--}}

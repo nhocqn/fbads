@@ -34,6 +34,7 @@
                         </form>
                         <br/>
                         <br/>
+                        @include('errors.showerrors')
 
                         <div class="table-responsive">
                             <table class="table table-borderless">
