@@ -22,7 +22,7 @@ Route::get('/home', function () {
 });
 Route::get('/login', function () {
     return redirect()->to(url('/facebook/login'));
-});
+})->name("login");
 
 Route::get('/facebook/login', 'FaceBookController@fb_login')->name("login");
 Route::get('/facebook/callback', 'FaceBookController@fb_callback');

@@ -66,7 +66,7 @@
                     <!-- Authentication Links -->
                     @guest
                     <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ route('/login') }}">Register</a></li>
+                    <li><a href="{{ url('/login') }}">Register</a></li>
                     @else
                         <li><a href="{{ url('/posts') }}">Dasboard</a></li>
 
